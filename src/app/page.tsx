@@ -1,7 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import Header from '@/components/Header'
-import BookmarkForm from '@/components/BookmarkForm'
-import BookmarkList from '@/components/BookmarkList'
+import BookmarkDashboard from '@/components/BookmarkDashboard'
 import { redirect } from 'next/navigation'
 
 export default async function Home() {
@@ -35,17 +34,7 @@ export default async function Home() {
           </p>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-3">
-          {/* Bookmark Form */}
-          <div className="lg:col-span-1">
-            <BookmarkForm userId={user.id} />
-          </div>
-          
-          {/* Bookmark List */}
-          <div className="lg:col-span-2">
-            <BookmarkList initialBookmarks={bookmarks || []} userId={user.id} />
-          </div>
-        </div>
+        <BookmarkDashboard initialBookmarks={bookmarks || []} userId={user.id} />
 
         {/* Info Section */}
         <div className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-4">

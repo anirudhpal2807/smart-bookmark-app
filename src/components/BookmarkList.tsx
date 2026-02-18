@@ -6,12 +6,12 @@ import { useEffect, useState } from 'react'
 import BookmarkItem from './BookmarkItem'
 
 interface BookmarkListProps {
-  initialBookmarks: Bookmark[]
+  bookmarks: Bookmark[]
+  setBookmarks: React.Dispatch<React.SetStateAction<Bookmark[]>>
   userId: string
 }
 
-export default function BookmarkList({ initialBookmarks, userId }: BookmarkListProps) {
-  const [bookmarks, setBookmarks] = useState<Bookmark[]>(initialBookmarks)
+export default function BookmarkList({ bookmarks, setBookmarks, userId }: BookmarkListProps) {
   const [isConnected, setIsConnected] = useState(false)
 
   useEffect(() => {

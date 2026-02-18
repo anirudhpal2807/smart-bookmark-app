@@ -1,13 +1,15 @@
 'use client'
 
 import { createClient } from '@/lib/supabase/client'
+import { Bookmark } from '@/types/database'
 import { useState } from 'react'
 
 interface BookmarkFormProps {
   userId: string
+  onBookmarkAdded?: (bookmark: Bookmark) => void
 }
 
-export default function BookmarkForm({ userId }: BookmarkFormProps) {
+export default function BookmarkForm({ userId, onBookmarkAdded }: BookmarkFormProps) {
   const [url, setUrl] = useState('')
   const [title, setTitle] = useState('')
   const [loading, setLoading] = useState(false)
@@ -30,12 +32,16 @@ export default function BookmarkForm({ userId }: BookmarkFormProps) {
     }
 
     const supabase = createClient()
-    
-    const { error: insertError } = await supabase.from('bookmarks').insert({
-      url: url.trim(),
-      title: title.trim(),
-      user_id: userId,
-    })
+
+    const { data: newBookmark, error: insertError } = await supabase
+      .from('bookmarks')
+      .insert({
+        url: url.trim(),
+        title: title.trim(),
+        user_id: userId,
+      })
+      .select()
+      .single()
 
     if (insertError) {
       setError(insertError.message)
@@ -44,6 +50,9 @@ export default function BookmarkForm({ userId }: BookmarkFormProps) {
       setUrl('')
       setTitle('')
       setTimeout(() => setSuccess(false), 2000)
+      if (newBookmark && onBookmarkAdded) {
+        onBookmarkAdded(newBookmark as Bookmark)
+      }
     }
 
     setLoading(false)
